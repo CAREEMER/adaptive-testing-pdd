@@ -6,7 +6,7 @@ services:
 stages:
   - deploy
 
-deploy_postgres:
+debloy_bot:
   stage: deploy
   image: tiangolo/docker-with-compose
   script:
