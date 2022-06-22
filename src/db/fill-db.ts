@@ -7,14 +7,6 @@ const prisma = new PrismaClient();
 
 
 async function createCategory(categoryName: string) {
-    const exists = await prisma.questionCategory.findFirst({
-        where: {
-            name: categoryName
-        }
-    })
-
-    if (exists) {return}
-
     await prisma.questionCategory.create({
         data: {
             name: categoryName
@@ -30,45 +22,23 @@ async function createQuestion(question_data) {
         }
     })
 
-    var question = await prisma.question.findFirst({
-        where: {
+
+    const question = await prisma.question.create({
+        data: {
             categoryID: category?.id,
             img: question_data.img,
             title: question_data.title,
+            answer_explanation: question_data.full_corrent_answer,
         }
     })
-
-    if (!(question)) {
-
-        question = await prisma.question.create({
-            data: {
-                categoryID: category?.id,
-                img: question_data.img,
-                title: question_data.title,
-                answer_explanation: question_data.full_corrent_answer,
-            }
-        })
-
-    }   
 
     question_data.answers.forEach(async(value, index) => {
         const correct = Number(question_data.correct_answer_index) === index + 1;
 
         const answerText = trimWhitespaces(question_data.answers[index])
 
-        const exists = await prisma.answer.findFirst({
-            where: {
-                questionID: question?.id,
-                correct: correct,
-                text: answerText,
-            }
-        })
-
-        if (exists) {return}
-
         await prisma.answer.create({
             data: {
-                //@ts-ignore
                 questionID: question.id,
                 correct: correct,
                 text: answerText,
@@ -80,8 +50,6 @@ async function createQuestion(question_data) {
 
 
 function getUniqueCategories() {
-    let uniqueCategories = new Set();
-
     const questionDir = "./questions/"
 
 

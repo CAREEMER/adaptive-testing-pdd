@@ -13,3 +13,5 @@ COPY . .
 RUN npx prisma db push
 
 RUN npx tsc
+
+RUN node ./dist/db/fill-db.js
