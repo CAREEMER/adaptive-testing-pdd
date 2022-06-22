@@ -10,9 +10,9 @@ check_dependencies:
   stage: deploy
   image: tiangolo/docker-with-compose
   before_script:
-    - docker stop $(docker ps -aq -f ancestor=pdd-tg-bot)
-    - docker rm $(docker ps -aq -f ancestor=pdd-tg-bot)
-    - docker rmi pdd-tg-bot
+    - docker stop $(docker ps -aq -f ancestor=pdd-tg-bot) | true
+    - docker rm $(docker ps -aq -f ancestor=pdd-tg-bot) | true
+    - docker rmi pdd-tg-bot | true
     - docker build --build-arg TG_TOKEN=${TG_TOKEN} --build-arg DATABASE_URL=${DATABASE_URL} . -t pdd-tg-bot
   script:
     - docker run pdd-tg-bot
