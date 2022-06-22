@@ -10,4 +10,6 @@ RUN npm install typescript
 
 COPY . .
 
+RUN npx prisma db push
+
 RUN npx tsc
