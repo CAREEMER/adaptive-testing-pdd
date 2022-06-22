@@ -10,6 +10,7 @@ debloy_bot:
   stage: deploy
   image: tiangolo/docker-with-compose
   script:
+    - echo $DATABASE_URL
     - docker-compose -p bot stop
     - docker-compose -p bot rm -f
     - docker-compose -p bot build
