@@ -16,3 +16,10 @@ check_dependencies:
     - docker build --build-arg TG_TOKEN=${TG_TOKEN} --build-arg DATABASE_URL=${DATABASE_URL} . -t pdd-tg-bot
   script:
     - docker run pdd-tg-bot
+  environment:
+    name: Staging
+  tags:
+    - deploy
+    - staging
+
+
