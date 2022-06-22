@@ -1,0 +1,56 @@
+datasource db {
+    url = env("DATABASE_URL")
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    telegramID Int @id @unique
+    createdAt DateTime @default(now())
+    username String? @db.VarChar(255)
+    answers UserAnswer[]
+    state State?
+}
+
+enum State {
+    RANDOM
+    ADAPTIVE
+}
+
+model QuestionCategory {
+    id Int @id @default(autoincrement())
+    name String @unique @db.VarChar(255)
+    questions Question[]
+}
+
+model Question {
+    id Int @id @default(autoincrement())
+    category QuestionCategory? @relation(fields: [categoryID], references: [id])
+    categoryID Int?
+    img String? @db.VarChar(255)
+    title String @db.Text
+    answer_explanation String @db.Text
+    answers Answer[]
+    userAnswers UserAnswer[]
+}
+
+model Answer {
+    id Int @id @default(autoincrement())
+    text String @db.Text
+    correct Boolean @default(false)
+    question Question? @relation(fields: [questionID], references: [id])
+    questionID Int?
+}
+
+model UserAnswer {
+    id Int @id @default(autoincrement())
+    correct Boolean @default(false)
+    createdAt DateTime @default(now())
+    question Question @relation(fields: [questionID], references: [id])
+    questionID Int
+    user User @relation(fields: [userID], references: [telegramID])
+    userID Int
+}
