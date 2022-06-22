@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  web:
+    build:
+      context: .
+    restart: on-failure
+    command: node ./dist/index.js
+    environment:
+      TG_TOKEN: ${TG_TOKEN}
+      DATABASE_URL: ${DATABASE_URL}
