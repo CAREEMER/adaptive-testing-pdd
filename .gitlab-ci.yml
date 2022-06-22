@@ -1,4 +1,4 @@
-image: docker:19.03.13
+image: docker:19.03.12
 
 services:
   - docker:19.03.12-dind
@@ -6,20 +6,16 @@ services:
 stages:
   - deploy
 
-build_tsc_and_deploy:
+deploy_postgres:
   stage: deploy
   image: tiangolo/docker-with-compose
-  before_script:
-    # - docker stop $(docker ps -aq -f ancestor=pdd-tg-bot) | true
-    # - docker rm $(docker ps -aq -f ancestor=pdd-tg-bot) | true
-    # - docker rmi pdd-tg-bot | true
-    - docker build --build-arg TG_TOKEN=${TG_TOKEN} --build-arg DATABASE_URL=${DATABASE_URL} . -t pdd-tg-bot
   script:
-    - docker run pdd-tg-bot
+    - docker-compose -p bot stop
+    - docker-compose -p bot rm -f
+    - docker-compose -p bot build
+    - docker-compose -p bot up -d --remove-orphans
   environment:
     name: Staging
   tags:
     - deploy
     - staging
-
-
