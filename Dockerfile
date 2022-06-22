@@ -12,8 +12,6 @@ COPY . .
 
 RUN echo ${DATABASE_URL}
 
-RUN npx prisma db push
-
 RUN npx tsc
 
-RUN node ./dist/db/fill-db.js
+ENTRYPOINT [ "npx", "prisma", "db", "push", "&&", "node", "./dist/db/fill-db.js" ]
