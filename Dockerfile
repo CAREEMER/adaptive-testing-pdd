@@ -10,6 +10,8 @@ RUN npm install typescript
 
 COPY . .
 
+RUN echo ${DATABASE_URL}
+
 RUN npx prisma db push
 
 RUN npx tsc
