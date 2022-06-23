@@ -10,8 +10,4 @@ RUN npm install typescript
 
 COPY . .
 
-RUN echo ${DATABASE_URL}
-
-RUN npx tsc
-
-ENTRYPOINT [ "npx", "prisma", "db", "push", "&&", "node", "./dist/db/fill-db.js" ]
+ENTRYPOINT [ "npx", "prisma", "db", "push" ]

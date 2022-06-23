@@ -5,7 +5,7 @@ services:
     build:
       context: .
     restart: on-failure
-    command: node ./dist/index.js
+    command: RUN npx tsc && node ./dist/db/fill-db.js && node ./dist/index.js
     environment:
       TG_TOKEN: ${TG_TOKEN}
       DATABASE_URL: ${DATABASE_URL}
