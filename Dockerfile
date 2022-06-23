@@ -4,10 +4,12 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
-
-RUN npm install typescript
+RUN npm i
 
 COPY . .
+
+RUN npx prisma db push
+
+RUN npx tsc
 
 ENTRYPOINT [ "node", "./dist/index.js" ]
