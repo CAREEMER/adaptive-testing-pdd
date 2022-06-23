@@ -6,15 +6,6 @@ const fs = require('fs')
 const prisma = new PrismaClient();
 
 
-async function createCategory(categoryName: string) {
-    await prisma.questionCategory.create({
-        data: {
-            name: categoryName
-        }
-    })
-}
-
-
 async function createQuestion(question_data) {
     const category = await prisma.questionCategory.findFirst({
         where: {
@@ -49,7 +40,25 @@ async function createQuestion(question_data) {
 }
 
 
-function getUniqueCategories() {
+async function createQuestions(data) {
+    await prisma.question.createMany({
+        data: data,
+        skipDuplicates: true,
+    })
+}
+
+
+async function createCategories(data) {
+    await prisma.questionCategory.createMany({
+        data: data,
+        skipDuplicates: true,
+    })
+}
+
+
+
+
+async function getUniqueCategories() {
     const questionDir = "./questions/"
 
 
@@ -62,23 +71,21 @@ function getUniqueCategories() {
         files.forEach(questionFile => {
             const category: string = questionFile.split("__")[0];
             if (!(categories.includes(category))){
-                categories.push(category);
+                //@ts-ignore
+                categories.push({name: category});
             }
 
             const question = JSON.parse(fs.readFileSync(questionDir + questionFile, 'utf-8'));
-            question.category = category;
+            question.category = {name: category};
 
             // @ts-ignore
             questions.push(question);
         });
-        
-        categories.forEach(element => {
-            createCategory(element);
-        });
 
-        questions.forEach(element => {
-            createQuestion(element);
-        });
+        // console.log(questions);
+
+        createCategories(categories)
+        createQuestions(questions)
     })
 }
 
