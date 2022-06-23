@@ -8,8 +8,6 @@ RUN npm i
 
 COPY . .
 
-RUN npx prisma db push
+RUN chmod +x ./deploy_commands.sh
 
-RUN npx tsc
-
-ENTRYPOINT [ "node", "./dist/index.js" ]
+ENTRYPOINT [ "./deploy_commands.sh" ]
