@@ -10,4 +10,4 @@ RUN npm install typescript
 
 COPY . .
 
-ENTRYPOINT [ "npx", "prisma", "db", "push" ]
+ENTRYPOINT [ "node", "./dist/index.js" ]
