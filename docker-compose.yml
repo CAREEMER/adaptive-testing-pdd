@@ -5,11 +5,12 @@ services:
     build:
       context: .
     restart: on-failure
-    command: RUN npx tsc && node ./dist/db/fill-db.js && node ./dist/index.js
+    ports:
+      - ${PORT}:80
     environment:
       TG_TOKEN: ${TG_TOKEN}
       DATABASE_URL: ${DATABASE_URL}
       ENVIRONMENT: ${ENVIRONMENT}
-      PORT: ${PORT}
+      PORT: 80
       SECRET_PATH: ${SECRET_PATH}
       DOMAIN: ${DOMAIN}

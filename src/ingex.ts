@@ -79,8 +79,7 @@ if (environment === 'local') {
         webhook: {
             domain: process.env.DOMAIN,
             hookPath: process.env.SECRET_PATH || '/secret-path',
-            //@ts-ignore
-            port: process.env.PORT || 3333
+            port: 80
         }
     })
 
