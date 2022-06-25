@@ -1,23 +1,23 @@
-# image: docker:19.03.12
+image: docker:19.03.12
 
-# services:
-#   - docker:19.03.12-dind
+services:
+  - docker:19.03.12-dind
 
-# stages:
-#   - deploy
+stages:
+  - deploy
 
-# deploy_bot:
-#   stage: deploy
-#   image: tiangolo/docker-with-compose
-#   script:
-#     - docker-compose -p bot stop
-#     - docker-compose -p bot rm -f
-#     - docker-compose -p bot build
-#     - docker-compose -p bot up -d --remove-orphans
-#   environment:
-#     name: Staging
-#   only:
-#     - master
-#   tags:
-#     - deploy
-#     - staging
+deploy_bot:
+  stage: deploy
+  image: tiangolo/docker-with-compose
+  script:
+    - docker-compose -p bot stop
+    - docker-compose -p bot rm -f
+    - docker-compose -p bot build
+    - docker-compose -p bot up -d --remove-orphans
+  environment:
+    name: Staging
+  only:
+    - master
+  tags:
+    - deploy
+    - staging
