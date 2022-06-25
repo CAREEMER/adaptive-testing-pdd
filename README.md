@@ -9,3 +9,7 @@ ONLY CREATE MIGRATIONS:
 npx prisma migrate dev --create-only
 
 npx prisma migrate dev --name migration_name
+
+
+RESTORE DB
+cat pdd-tg-bot.dump | docker exec -i db_db_1 psql -U rashid -d pdd-tg-bot-staging

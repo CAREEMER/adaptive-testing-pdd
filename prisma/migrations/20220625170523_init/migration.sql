@@ -3,17 +3,29 @@ CREATE TYPE "State" AS ENUM ('RANDOM', 'ADAPTIVE');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "telegramID" INTEGER NOT NULL,
+    "id" TEXT NOT NULL,
+    "telegramID" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "username" VARCHAR(255),
+    "password" TEXT,
     "state" "State",
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("telegramID")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SessionToken" (
+    "id" TEXT NOT NULL,
+    "userID" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "active" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "SessionToken_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "QuestionCategory" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "name" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "QuestionCategory_pkey" PRIMARY KEY ("id")
@@ -21,8 +33,8 @@ CREATE TABLE "QuestionCategory" (
 
 -- CreateTable
 CREATE TABLE "Question" (
-    "id" SERIAL NOT NULL,
-    "categoryID" INTEGER,
+    "id" TEXT NOT NULL,
+    "categoryID" TEXT,
     "img" VARCHAR(255),
     "title" TEXT NOT NULL,
     "answer_explanation" TEXT NOT NULL,
@@ -32,20 +44,20 @@ CREATE TABLE "Question" (
 
 -- CreateTable
 CREATE TABLE "Answer" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "text" TEXT NOT NULL,
     "correct" BOOLEAN NOT NULL DEFAULT false,
-    "questionID" INTEGER,
+    "questionID" TEXT,
 
     CONSTRAINT "Answer_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "UserAnswer" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "correct" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "questionID" INTEGER NOT NULL,
+    "questionID" TEXT NOT NULL,
     "userID" INTEGER NOT NULL,
 
     CONSTRAINT "UserAnswer_pkey" PRIMARY KEY ("id")
@@ -56,6 +68,9 @@ CREATE UNIQUE INDEX "User_telegramID_key" ON "User"("telegramID");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "QuestionCategory_name_key" ON "QuestionCategory"("name");
+
+-- AddForeignKey
+ALTER TABLE "SessionToken" ADD CONSTRAINT "SessionToken_userID_fkey" FOREIGN KEY ("userID") REFERENCES "User"("telegramID") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Question" ADD CONSTRAINT "Question_categoryID_fkey" FOREIGN KEY ("categoryID") REFERENCES "QuestionCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
