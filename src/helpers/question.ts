@@ -1,4 +1,5 @@
 import { Question, User, PrismaClient, QuestionCategory } from "@prisma/client";
+import e from "express";
 import { constructQuestionKeyboard } from "./keyboard";
 
 
@@ -9,7 +10,19 @@ function sendQuestion(ctx, question: Question) {
     if (question.img) {ctx.replyWithPhoto(question.img)};
 
     var keyboard = constructQuestionKeyboard(question);
-    ctx.reply(question.title, keyboard)
+    ctx.reply(constructMessageText(question), keyboard)
+}
+
+
+function constructMessageText(question) {
+    let output = question.title + "\n\n";
+
+    for (let i = 0; i < question.answers.length; i++) {
+        const answer = question.answers[i]
+        output += (i + 1).toString() + " - " + answer.text + "\n\n"
+    }
+
+    return output
 }
 
 

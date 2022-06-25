@@ -9,7 +9,6 @@ import { constructSelectModeKeyboard } from "./helpers/keyboard";
 const bot = new Telegraf(process.env.TG_TOKEN);
 
 
-
 // MIDDLEWARE
 
 bot.use(async (ctx, next) => {
@@ -24,9 +23,14 @@ bot.use(async (ctx, next) => {
     //@ts-ignore
     if (ctx.message?.dice?.emoji === '🎲') {
         await updateUserState(user.telegramID, 'RANDOM')
+        await ctx.reply("Вы выбрали случайные вопросы!")
     //@ts-ignore
     } else if (ctx.message?.text === '📊') {
         await updateUserState(user.telegramID, 'ADAPTIVE')
+        await ctx.reply("Бот теперь будет адаптивно подбирать вопросы!")
+        //@ts-ignore
+    } else if (ctx.message?.text === '📝 Следующий вопрос') {
+        sendQuestion(ctx, await getQuestion(ctx.message.from.id));
     }
     await next();
 })
@@ -35,14 +39,12 @@ bot.use(async (ctx, next) => {
 
 
 bot.command('start', async(ctx) => {
-    const startReply: string = "Привет! Это ПДД-бот с адаптивным тестированием. По мере твоих ответов на вопросы ПДД бот будет учиться и давать тебе вопросы из тем, которые ты знаешь хуже.\nСкорейшего обучения!"
+    const startReply: string = "Привет! Это ПДД-бот с адаптивным тестированием. По мере твоих ответов на вопросы ПДД бот будет учиться и давать тебе вопросы из тем, которые ты знаешь хуже.\nСкорейшего обучения!\n\nВведи /q чтобы начать тестирование!"
     await ctx.reply(startReply, constructSelectModeKeyboard())
 })
 
 bot.command('q', async(ctx) => {
-    const question = await getQuestion(ctx.message.from.id);
-    // const question = await getRandomQuestion()
-    sendQuestion(ctx, question);
+    sendQuestion(ctx, await getQuestion(ctx.message.from.id));
 })
 
 bot.on('callback_query', async(ctx) => {

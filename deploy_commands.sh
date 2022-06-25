@@ -1,4 +1,4 @@
 #!/bin/bash
-npx prisma db push
+npx prisma migrate deploy
 npx tsc
 node ./dist/ingex.js 
