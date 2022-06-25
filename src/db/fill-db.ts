@@ -19,7 +19,7 @@ function constructAnswers(answers, correct_answer_index) {
         const correct = Number(correct_answer_index) === index + 1;
 
         const answerText = trimWhitespaces(value)
-        
+
         outputAnswers.push({
             //@ts-ignore
             correct: correct,
@@ -48,14 +48,14 @@ async function getUniqueCategories() {
 
         files.forEach(questionFile => {
             const categoryName: string = questionFile.split("__")[0];
-            if (!(categories.includes(categoryName))){
+            if (!(categories.includes(categoryName))) {
                 //@ts-ignore
                 categories.push(categoryName);
                 //@ts-ignore
 
-                data.push({name: categoryName, questions: {create: []}});
+                data.push({ name: categoryName, questions: { create: [] } });
             }
-            
+
             //@ts-ignore
             let categoryIndex = data.findIndex(x => x.name === categoryName)
 

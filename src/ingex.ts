@@ -25,7 +25,7 @@ bot.use(async (ctx, next) => {
     if (ctx.message?.dice?.emoji === '🎲') {
         await updateUserState(user.telegramID, 'RANDOM')
         await ctx.reply("Вы выбрали случайные вопросы!")
-    //@ts-ignore
+        //@ts-ignore
     } else if (ctx.message?.text === '📊') {
         await updateUserState(user.telegramID, 'ADAPTIVE')
         await ctx.reply("Бот теперь будет адаптивно подбирать вопросы!")
@@ -39,22 +39,22 @@ bot.use(async (ctx, next) => {
 // END MIDDLEWARE
 
 
-bot.command('start', async(ctx) => {
+bot.command('start', async (ctx) => {
     const startReply: string = "Привет! Это ПДД-бот с адаптивным тестированием. По мере твоих ответов на вопросы ПДД бот будет учиться и давать тебе вопросы из тем, которые ты знаешь хуже.\nСкорейшего обучения!\n\nВведи /q чтобы начать тестирование!"
     await ctx.reply(startReply, constructSelectModeKeyboard())
 })
 
-bot.command('q', async(ctx) => {
+bot.command('q', async (ctx) => {
     sendQuestion(ctx, await getQuestion(ctx.message.from.id));
 })
 
-bot.on('callback_query', async(ctx) => {
+bot.on('callback_query', async (ctx) => {
     // @ts-ignore
     var data = ctx.callbackQuery.data.split("**");
 
     const isCorrect = data[0] === 'true';
     const questionID = data[1];
-        
+
     if (!(isCorrect)) {
         var question = await getQuestionById(Number(questionID));
 
@@ -73,18 +73,21 @@ bot.on('callback_query', async(ctx) => {
 
 if (environment === 'local') {
     bot.launch()
+    console.log("BOT IS STARTED")
 } else {
     bot.launch({
         webhook: {
-          domain: process.env.DOMAIN,
-          hookPath: process.env.SECRET_PATH || '/secret-path',
-          //@ts-ignore
-          port: process.env.PORT || 3333
+            domain: process.env.DOMAIN,
+            hookPath: process.env.SECRET_PATH || '/secret-path',
+            //@ts-ignore
+            port: process.env.PORT || 3333
         }
-      })
+    })
+
+    console.log("BOT IS STARTED ON " + process.env.DOMAIN + process.env.SECRET_PATH || '/secret-path')
 }
 
-console.log("BOT IS STARTED")
+
 
 
 process.once('SIGINT', () => bot.stop('SIGINT'))

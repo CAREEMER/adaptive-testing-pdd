@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 
 function sendQuestion(ctx, question: Question) {
-    if (question.img) {ctx.replyWithPhoto(question.img)};
+    if (question.img) { ctx.replyWithPhoto(question.img) };
 
     var keyboard = constructQuestionKeyboard(question);
     ctx.reply(constructMessageText(question), keyboard)
@@ -51,7 +51,7 @@ async function getRandomQuestion(): Promise<Question> {
     }
 
     const question = await prisma.question.findMany({
-        orderBy: {['id']: 'asc'},
+        orderBy: { ['id']: 'asc' },
         take: 1,
         skip: randomNumber(0, count - 1),
         include: {
@@ -75,7 +75,7 @@ async function getRandomQuestionInCategory(category: QuestionCategory): Promise<
     }
 
     const question = await prisma.question.findMany({
-        orderBy: {['id']: 'asc'},
+        orderBy: { ['id']: 'asc' },
         where: {
             categoryID: category.id
         },
@@ -112,13 +112,13 @@ const chooseWeightedElement = (probs: number[]): number => {
 }
 
 
-async function getAdaptiveQuestion(user: User){
+async function getAdaptiveQuestion(user: User) {
     const categories = await prisma.questionCategory.findMany();
     const countVal = 5;
 
-    
+
     const answersOnCategories = await Promise.all(categories.map(
-        async(category) => await prisma.userAnswer.findMany(
+        async (category) => await prisma.userAnswer.findMany(
             {
                 where: {
                     question: {
@@ -135,19 +135,19 @@ async function getAdaptiveQuestion(user: User){
         (answersOnCategory) => countVal - answersOnCategory.filter(answer => answer.correct).length
     )
 
-    while(probs.indexOf(0) !== -1) {
+    while (probs.indexOf(0) !== -1) {
         probs[probs.indexOf(0)] = 1
     }
 
     const ind = chooseWeightedElement(probs)
-    
+
     const chosenCategory = categories[ind];
 
     return await getRandomQuestionInCategory(chosenCategory);
 }
 
 
-async function getQuestionById(id: number): Promise <Question | null> {
+async function getQuestionById(id: number): Promise<Question | null> {
     const question = await prisma.question.findFirst({
         where: {
             id: id

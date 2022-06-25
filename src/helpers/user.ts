@@ -39,7 +39,7 @@ async function updateUserState(telegramID: number, state: string) {
             telegramID: telegramID
         },
         data: {
-        // @ts-ignore
+            // @ts-ignore
             state: state,
         }
     })

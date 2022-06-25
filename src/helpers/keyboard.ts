@@ -9,7 +9,7 @@ function constructSelectModeKeyboard(): typeof Keyboard {
 function constructQuestionKeyboard(question): typeof Keyboard {
     var callbackButtons: typeof Key[] = [];
 
-    for (let i = 0; i < question.answers.length; i++ ) {
+    for (let i = 0; i < question.answers.length; i++) {
         const answer = question.answers[i];
         callbackButtons.push(Key.callback(i + 1, answer.correct + '**' + question.id))
     }
