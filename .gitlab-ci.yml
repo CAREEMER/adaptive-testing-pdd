@@ -6,7 +6,7 @@ services:
 stages:
   - deploy
 
-debloy_bot:
+deploy_bot:
   stage: deploy
   image: tiangolo/docker-with-compose
   script:
@@ -16,6 +16,8 @@ debloy_bot:
     - docker-compose -p bot up -d --remove-orphans
   environment:
     name: Staging
+  only:
+    - master
   tags:
     - deploy
     - staging
