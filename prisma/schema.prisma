@@ -8,7 +8,7 @@ generator client {
 }
 
 model User {
-    id         String         @id @default(uuid())
+    id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     telegramID Int?           @unique
     createdAt  DateTime       @default(now())
     username   String?        @db.VarChar(255)
@@ -24,23 +24,23 @@ enum State {
 }
 
 model SessionToken {
-    id        String   @id @default(uuid())
-    user      User     @relation(fields: [userID], references: [telegramID])
-    userID    Int
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    user      User     @relation(fields: [userID], references: [id])
+    userID    String   @db.Uuid
     createdAt DateTime @default(now())
     active    Boolean  @default(true)
 }
 
 model QuestionCategory {
-    id        String     @id @default(uuid())
+    id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     name      String     @unique @db.VarChar(255)
     questions Question[]
 }
 
 model Question {
-    id                 String            @id @default(uuid())
+    id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     category           QuestionCategory? @relation(fields: [categoryID], references: [id])
-    categoryID         String?
+    categoryID         String?           @db.Uuid
     img                String?           @db.VarChar(255)
     title              String            @db.Text
     answer_explanation String            @db.Text
@@ -49,19 +49,19 @@ model Question {
 }
 
 model Answer {
-    id         String    @id @default(uuid())
+    id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     text       String    @db.Text
     correct    Boolean   @default(false)
     question   Question? @relation(fields: [questionID], references: [id])
-    questionID String?
+    questionID String?   @db.Uuid
 }
 
 model UserAnswer {
-    id         String   @id @default(uuid())
+    id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     correct    Boolean  @default(false)
     createdAt  DateTime @default(now())
     question   Question @relation(fields: [questionID], references: [id])
-    questionID String
-    user       User     @relation(fields: [userID], references: [telegramID])
-    userID     Int
+    questionID String   @db.Uuid
+    user       User     @relation(fields: [userID], references: [id])
+    userID     String   @db.Uuid
 }

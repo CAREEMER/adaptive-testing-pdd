@@ -124,7 +124,7 @@ async function getAdaptiveQuestion(user: User) {
                     question: {
                         categoryID: category.id
                     },
-                    userID: user.telegramID,
+                    userID: user.id,
                 },
                 take: countVal,
             }
@@ -147,7 +147,7 @@ async function getAdaptiveQuestion(user: User) {
 }
 
 
-async function getQuestionById(id: number): Promise<Question | null> {
+async function getQuestionById(id: string): Promise<Question | null> {
     const question = await prisma.question.findFirst({
         where: {
             id: id

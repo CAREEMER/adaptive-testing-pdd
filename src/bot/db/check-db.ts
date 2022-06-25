@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 
-async function checkQuestion(questionID: number) {
+async function checkQuestion(questionID: string) {
     let question = await prisma.question.findFirst({
         where: {
             id: questionID,

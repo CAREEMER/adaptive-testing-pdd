@@ -22,12 +22,21 @@ async function registerUser(ctx): Promise<User> {
 }
 
 
-async function registerUserAnswer(telegramID: number, questionID: number, correct: boolean) {
+async function registerUserAnswer(telegramID: number, questionID: string, correct: boolean) {
+    console.log(questionID)
     await prisma.userAnswer.create({
         data: {
             correct: correct,
-            questionID: questionID,
-            userID: telegramID,
+            question: {
+                connect: {
+                    id: questionID
+                }
+            },
+            user: {
+                connect: {
+                    telegramID: telegramID
+                }
+            }
         }
     })
 }

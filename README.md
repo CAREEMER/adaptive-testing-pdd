@@ -13,3 +13,5 @@ npx prisma migrate dev --name migration_name
 
 RESTORE DB
 cat pdd-tg-bot.dump | docker exec -i db_db_1 psql -U rashid -d pdd-tg-bot-staging
+BACKUP
+docker exec -it db_db_1 pg_dump -U rashid -w pdd-tg-bot-staging --no-owner > st-pdd-tg-bot.dump

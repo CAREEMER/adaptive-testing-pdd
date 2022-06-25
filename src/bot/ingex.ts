@@ -23,10 +23,12 @@ bot.use(async (ctx, next) => {
 
     //@ts-ignore
     if (ctx.message?.dice?.emoji === '🎲') {
+        //@ts-ignore
         await updateUserState(user.telegramID, 'RANDOM')
         await ctx.reply("Вы выбрали случайные вопросы!")
         //@ts-ignore
     } else if (ctx.message?.text === '📊') {
+        //@ts-ignore
         await updateUserState(user.telegramID, 'ADAPTIVE')
         await ctx.reply("Бот теперь будет адаптивно подбирать вопросы!")
         //@ts-ignore
@@ -56,14 +58,14 @@ bot.on('callback_query', async (ctx) => {
     const questionID = data[1];
 
     if (!(isCorrect)) {
-        var question = await getQuestionById(Number(questionID));
+        var question = await getQuestionById(questionID);
 
         // @ts-ignore
         ctx.reply(question.answer_explanation);
     }
 
     // @ts-ignore
-    await registerUserAnswer(Number(ctx.chat.id), Number(questionID), isCorrect);
+    await registerUserAnswer(Number(ctx.chat.id), questionID, isCorrect);
 
     //@ts-ignore
     var randomQuestion = await getQuestion(ctx.chat.id)
