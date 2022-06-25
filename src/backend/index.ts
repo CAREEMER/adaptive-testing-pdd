@@ -1,12 +1,6 @@
-import { PrismaClient } from '@prisma/client'
-import express from 'express'
+const app = require('./app');
 
-const prisma = new PrismaClient()
-const app = express()
-
-app.use(express.json())
-
-
-app.listen(3000, () =>
-  console.log('REST API server ready at: http://localhost:3000'),
-)
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Listening: http://localhost:${port}`);
+});

@@ -13,7 +13,6 @@ async function registerUser(ctx): Promise<User> {
         return await prisma.user.create({
             data: {
                 telegramID: ctx.chat.id,
-                username: ctx.chat.username,
             }
         })
     }
