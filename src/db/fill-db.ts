@@ -77,7 +77,7 @@ async function getUniqueCategories() {
 
         for (const category of data) {
             createCategory(category)
-            sleep(200)
+            sleep(100)
         }
 
     })
