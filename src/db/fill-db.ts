@@ -6,56 +6,34 @@ const fs = require('fs')
 const prisma = new PrismaClient();
 
 
-async function createQuestion(question_data) {
-    const category = await prisma.questionCategory.findFirst({
-        where: {
-            name: question_data.category
-        }
+async function createCategory(data) {
+    await prisma.questionCategory.create({
+        data: data,
     })
+}
 
 
-    const question = await prisma.question.create({
-        data: {
-            categoryID: category?.id,
-            img: question_data.img,
-            title: question_data.title,
-            answer_explanation: question_data.full_corrent_answer,
-        }
-    })
+function constructAnswers(answers, correct_answer_index) {
+    var outputAnswers = []
+    answers.forEach((value, index) => {
+        const correct = Number(correct_answer_index) === index + 1;
 
-    question_data.answers.forEach(async(value, index) => {
-        const correct = Number(question_data.correct_answer_index) === index + 1;
-
-        const answerText = trimWhitespaces(question_data.answers[index])
-
-        await prisma.answer.create({
-            data: {
-                questionID: question.id,
-                correct: correct,
-                text: answerText,
-            }
+        const answerText = trimWhitespaces(value)
+        
+        outputAnswers.push({
+            //@ts-ignore
+            correct: correct,
+            //@ts-ignore
+            text: answerText,
         })
-
     })
+    return outputAnswers
 }
 
 
-async function createQuestions(data) {
-    await prisma.question.createMany({
-        data: data,
-        skipDuplicates: true,
-    })
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-
-async function createCategories(data) {
-    await prisma.questionCategory.createMany({
-        data: data,
-        skipDuplicates: true,
-    })
-}
-
-
 
 
 async function getUniqueCategories() {
@@ -66,27 +44,44 @@ async function getUniqueCategories() {
         if (err) throw err;
 
         var categories: string[] = [];
-        var questions = [];
+        var data = [];
 
         files.forEach(questionFile => {
-            const category: string = questionFile.split("__")[0];
-            if (!(categories.includes(category))){
+            const categoryName: string = questionFile.split("__")[0];
+            if (!(categories.includes(categoryName))){
                 //@ts-ignore
-                categories.push({name: category});
+                categories.push(categoryName);
+                //@ts-ignore
+
+                data.push({name: categoryName, questions: {create: []}});
+            }
+            
+            //@ts-ignore
+            let categoryIndex = data.findIndex(x => x.name === categoryName)
+
+            const questionData = JSON.parse(fs.readFileSync(questionDir + questionFile, 'utf-8'));
+
+            const question = {
+                img: questionData.img,
+                title: questionData.title,
+                answer_explanation: questionData.full_corrent_answer,
+                answers: {
+                    create: constructAnswers(questionData.answers, questionData.correct_answer_index)
+                }
             }
 
-            const question = JSON.parse(fs.readFileSync(questionDir + questionFile, 'utf-8'));
-            question.category = {name: category};
-
             // @ts-ignore
-            questions.push(question);
+            data[categoryIndex].questions.create.push(question)
         });
 
-        // console.log(questions);
 
-        createCategories(categories)
-        createQuestions(questions)
+        for (const category of data) {
+            createCategory(category)
+            sleep(200)
+        }
+
     })
 }
+
 
 getUniqueCategories()
