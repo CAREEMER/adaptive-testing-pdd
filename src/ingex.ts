@@ -6,7 +6,8 @@ import { constructSelectModeKeyboard } from "./helpers/keyboard";
 
 
 //@ts-ignore
-const bot = new Telegraf(process.env.TG_TOKEN);
+const bot = new Telegraf(process.env.TG_TOKEN || '5557815278:AAHh8l21JqkjOtTc7swr6KoQHezhI6H9VkU');
+const environment = process.env.ENVIRONMENT || 'local'
 
 
 // MIDDLEWARE
@@ -70,6 +71,21 @@ bot.on('callback_query', async(ctx) => {
     sendQuestion(ctx, randomQuestion);
 })
 
+if (environment === 'local') {
+    bot.launch()
+} else {
+    bot.launch({
+        webhook: {
+          domain: process.env.DOMAIN,
+          hookPath: process.env.SECRET_PATH || '/secret-path',
+          //@ts-ignore
+          port: process.env.PORT || 3333
+        }
+      })
+}
 
-bot.launch()
 console.log("BOT IS STARTED")
+
+
+process.once('SIGINT', () => bot.stop('SIGINT'))
+process.once('SIGTERM', () => bot.stop('SIGTERM'))

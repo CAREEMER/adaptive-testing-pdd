@@ -9,3 +9,7 @@ services:
     environment:
       TG_TOKEN: ${TG_TOKEN}
       DATABASE_URL: ${DATABASE_URL}
+      ENVIRONMENT: ${ENVIRONMENT}
+      PORT: ${PORT}
+      SECRET_PATH: ${SECRET_PATH}
+      DOMAIN: ${DOMAIN}
