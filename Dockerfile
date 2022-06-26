@@ -8,6 +8,5 @@ RUN npm i
 
 COPY . .
 
-RUN chmod +x ./deploy_commands.sh
-
-ENTRYPOINT [ "./deploy_commands.sh" ]
+RUN chmod +x ./bot.deploy_commands.sh
+RUN chmod +x ./backend.deploy_commands.sh

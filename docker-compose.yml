@@ -14,3 +14,13 @@ services:
       PORT: 80
       SECRET_PATH: ${SECRET_PATH}
       DOMAIN: ${DOMAIN}
+    command: ./bot.deploy_commands.sh
+  api:
+    build:
+      context: .
+    restart: on-failure
+    ports:
+      - ${PORT}:80
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    command: ./api.deploy_commands.sh
