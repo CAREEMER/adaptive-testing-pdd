@@ -43,7 +43,7 @@ async function registerAnswer(res, user, questionID, answerID) {
             correct: answer.correct,
             //@ts-ignore
             questionID: answer.questionID,
-            userID: user.ID
+            userID: user.id
         }
     })
 
