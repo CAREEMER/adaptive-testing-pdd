@@ -25,4 +25,30 @@ async function getQuestionsByCategoryPaginated(categoryID: string, skip: number,
 }
 
 
-export { getQuestionsByCategory, getQuestionsByCategoryPaginated }
+async function registerAnswer(res, user, questionID, answerID) {
+    const answer = await prisma.answer.findFirst({
+        where: {
+            id: answerID,
+            questionID: questionID
+        }
+    })
+
+    if (!answer) {
+        res.status(404)
+        throw new Error("Can't find such answer.")
+    }
+
+    await prisma.userAnswer.create({
+        data: {
+            correct: answer.correct,
+            //@ts-ignore
+            questionID: answer.questionID,
+            userID: user.ID
+        }
+    })
+
+    return answer.correct
+}
+
+
+export { getQuestionsByCategory, getQuestionsByCategoryPaginated, registerAnswer }

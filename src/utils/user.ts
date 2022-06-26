@@ -16,9 +16,7 @@ async function createUserByUsernameAndPassword(username: string, password: strin
     data: {
       username,
       password,
-      tokens: {
-        create: {}
-      }
+      state: 'RANDOM',
     }
   });
 }
