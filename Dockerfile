@@ -9,4 +9,4 @@ RUN npm i
 COPY . .
 
 RUN chmod +x ./bot.deploy_commands.sh
-RUN chmod +x ./backend.deploy_commands.sh
+RUN chmod +x ./api.deploy_commands.sh
