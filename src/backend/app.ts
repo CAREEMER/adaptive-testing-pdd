@@ -1,10 +1,10 @@
-const express = require('express');
+const _express = require('express');
 
 const api = require('./api');
 
-const app = express();
+const app = _express();
 
-app.use(express.json());
+app.use(_express.json());
 
 app.get('/', (req, res) => {
   res.json({
@@ -14,4 +14,4 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1', api);
 
-export { app };
+module.exports = app;

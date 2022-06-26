@@ -1,7 +1,9 @@
 const express = require('express');
 
-// import { router as auth } from './auth/auth';
-const auth = require('./auth/auth')
+const auth = require('./auth/auth.routes')
+const categories = require('./categories/categories.routes')
+const questions = require('./questions/questions.routes')
+
 
 const router = express.Router();
 
@@ -11,7 +13,8 @@ router.get('/', (req, res) => {
   });
 });
 
-console.log(auth)
 router.use('/auth', auth);
+router.use('/categories', categories)
+router.use('/questions', questions)
 
-export { router }
+module.exports = router;

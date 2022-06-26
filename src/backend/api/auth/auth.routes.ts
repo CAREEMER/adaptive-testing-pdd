@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/register', async (req, res, next) => {
   try {
     const { username, password } = req.body;
+
     if (!username || !password) {
       res.status(400);
       throw new Error('You must provide an username and a password.');

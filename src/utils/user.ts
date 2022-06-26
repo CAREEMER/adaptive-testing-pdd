@@ -53,10 +53,24 @@ async function findUserById(id: string): Promise<User | null> {
   });
 }
 
+
+async function getToken(token: string) {
+  return await prisma.sessionToken.findFirst({
+    where: {
+      id: token,
+      active: true,
+    },
+    include: {
+      user: true
+    }
+  })
+}
+
 export {
   findUserByUsername,
   findUserById,
   checkPassword,
   createSessionToken,
-  createUserByUsernameAndPassword
+  createUserByUsernameAndPassword,
+  getToken,
 };
