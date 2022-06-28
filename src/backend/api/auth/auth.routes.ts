@@ -21,13 +21,17 @@ router.post('/register', async (req, res, next) => {
 
     const user = await createUserByUsernameAndPassword(username, password);
 
-    res.json({
-      user
-    });
+    const serializeUser = (user) => {
+      const { password, telegramID, createdAt, ...response } = user
+      return response
+    }
+
+    res.json(serializeUser(user));
   } catch (err) {
     next(err);
   }
 })
+
 
 router.post('/login', async (req, res, next) => {
   try {

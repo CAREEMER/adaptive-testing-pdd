@@ -7,9 +7,7 @@ router.get('/list', async (req, res, next) => {
   try {
     const categories = await listAllCategories();
 
-    res.json({
-        categories
-    });
+    res.json(categories);
   } catch (err) {
     next(err);
   }

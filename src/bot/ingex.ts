@@ -1,5 +1,5 @@
 import { Telegraf } from "telegraf";
-import { getQuestion, getQuestionById } from "./helpers/question";
+import { getQuestion, getQuestionById } from "../utils/questions";
 import { registerUserAnswer, registerUser, updateUserState } from "./helpers/user";
 import { sendQuestion } from "./helpers/question";
 import { constructSelectModeKeyboard } from "./helpers/keyboard";
@@ -33,7 +33,7 @@ bot.use(async (ctx, next) => {
         await ctx.reply("Бот теперь будет адаптивно подбирать вопросы!")
         //@ts-ignore
     } else if (ctx.message?.text === '📝 Следующий вопрос') {
-        sendQuestion(ctx, await getQuestion(ctx.message.from.id));
+        sendQuestion(ctx, await getQuestion({ telegramID: ctx.message.from.id }, false));
     }
     await next();
 })
@@ -47,7 +47,7 @@ bot.command('start', async (ctx) => {
 })
 
 bot.command('q', async (ctx) => {
-    sendQuestion(ctx, await getQuestion(ctx.message.from.id));
+    sendQuestion(ctx, await getQuestion({ telegramID: ctx.message.from.id }, false));
 })
 
 bot.on('callback_query', async (ctx) => {
@@ -68,7 +68,7 @@ bot.on('callback_query', async (ctx) => {
     await registerUserAnswer(Number(ctx.chat.id), questionID, isCorrect);
 
     //@ts-ignore
-    var randomQuestion = await getQuestion(ctx.chat.id)
+    var randomQuestion = await getQuestion({ telegramID: ctx.chat.id }, false)
 
     sendQuestion(ctx, randomQuestion);
 })
