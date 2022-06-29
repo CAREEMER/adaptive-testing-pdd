@@ -1,4 +1,4 @@
-import { Question, User, PrismaClient, QuestionCategory } from "@prisma/client";
+import { Question, PrismaClient } from "@prisma/client";
 import { constructQuestionKeyboard } from "./keyboard";
 
 

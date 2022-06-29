@@ -1,3 +1,6 @@
+import {  User, PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
 import { getToken } from "./user";
 
 
@@ -13,4 +16,16 @@ async function authWithToken(req, res) {
     return token.user;
 }
 
-export { authWithToken };
+
+async function createDeeplinkToken(user: User) {
+  const token = await prisma.deeplinkToken.create({
+    data: {
+      userID: user.id,
+    }
+  })
+
+  return token.token;
+}
+
+
+export { authWithToken, createDeeplinkToken };

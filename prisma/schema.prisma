@@ -8,14 +8,15 @@ generator client {
 }
 
 model User {
-    id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    telegramID Int?           @unique
-    createdAt  DateTime       @default(now())
-    username   String?        @unique @db.VarChar(255)
-    password   String?
-    answers    UserAnswer[]
-    tokens     SessionToken[]
-    state      State?
+    id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    telegramID     Int?            @unique
+    createdAt      DateTime        @default(now())
+    username       String?         @unique @db.VarChar(255)
+    password       String?
+    answers        UserAnswer[]
+    tokens         SessionToken[]
+    deeplinkTokens DeeplinkToken[]
+    state          State?
 }
 
 enum State {
@@ -64,4 +65,10 @@ model UserAnswer {
     questionID String   @db.Uuid
     user       User     @relation(fields: [userID], references: [id])
     userID     String   @db.Uuid
+}
+
+model DeeplinkToken {
+    token  String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    user   User   @relation(fields: [userID], references: [id])
+    userID String @db.Uuid
 }
