@@ -14,6 +14,7 @@ services:
       PORT: 80
       SECRET_PATH: ${SECRET_PATH}
       DOMAIN: ${DOMAIN}
+      BOT_USERNAME: ${BOT_USERNAME}
     command: ./bot.deploy_commands.sh
   api:
     build:
