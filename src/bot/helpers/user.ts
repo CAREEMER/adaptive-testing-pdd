@@ -2,19 +2,25 @@ import { User, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 
-async function registerUser(ctx): Promise<User> {
-    const user = await prisma.user.findUnique({
-        where: {
-            telegramID: ctx.chat.id
-        }
-    })
+async function registerUser(ctx, redisClient) {
+    const redisKey = 'user**' + ctx.chat.id.toString()
+    const cachedUser = await redisClient.get(redisKey)
 
-    if (!(user)) {
-        return await prisma.user.create({
+    if (!cachedUser) {
+        var user = await prisma.user.findUnique({
+            where: {
+                telegramID: ctx.chat.id
+            }
+        }) || await prisma.user.create({
             data: {
                 telegramID: ctx.chat.id,
             }
         })
+
+        await redisClient.set(redisKey, JSON.stringify(user))
+    } else {
+        //@ts-ignore
+        var user = JSON.parse(cachedUser);
     }
 
     return user;
@@ -41,7 +47,9 @@ async function registerUserAnswer(telegramID: number, questionID: string, correc
 }
 
 
-async function updateUserState(telegramID: number, state: string) {
+async function updateUserState(telegramID: number, state: string, redisClient) {
+    const redisKey = "user**" + telegramID.toString()
+
     const user = await prisma.user.update({
         where: {
             telegramID: telegramID
@@ -51,6 +59,8 @@ async function updateUserState(telegramID: number, state: string) {
             state: state,
         }
     })
+
+    await redisClient.set(redisKey, JSON.stringify(user))
 }
 
 

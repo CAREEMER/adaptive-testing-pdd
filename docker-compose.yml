@@ -10,12 +10,14 @@ services:
     environment:
       TG_TOKEN: ${TG_TOKEN}
       DATABASE_URL: ${DATABASE_URL}
+      REDIS_DSN: ${REDIS_DSN}
       ENVIRONMENT: ${ENVIRONMENT}
       PORT: 80
       SECRET_PATH: ${SECRET_PATH}
       DOMAIN: ${DOMAIN}
       BOT_USERNAME: ${BOT_USERNAME}
     command: ./bot.deploy_commands.sh
+
   api:
     build:
       context: .
@@ -23,5 +25,15 @@ services:
     ports:
       - ${API_PORT}:3000
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_DSN: ${REDIS_DSN}
     command: ./api.deploy_commands.sh
+
+  redis:
+    image: redis:6.2.5
+    restart: on-failure
+    healthcheck:
+      test: redis-cli ping
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -3,6 +3,13 @@ import { getQuestion, getQuestionById } from "../utils/questions";
 import { registerUserAnswer, registerUser, updateUserState } from "./helpers/user";
 import { sendQuestion } from "./helpers/question";
 import { constructSelectModeKeyboard } from "./helpers/keyboard";
+import { createClient } from 'redis';
+
+const redisClient = createClient({
+    url: process.env.REDIS_DSN || 'redis://localhost:6379'
+});
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
+redisClient.connect();
 
 
 //@ts-ignore
@@ -19,21 +26,21 @@ bot.use(async (ctx, next) => {
 })
 
 bot.use(async (ctx, next) => {
-    const user = await registerUser(ctx);
+    const user = await registerUser(ctx, redisClient);
 
     //@ts-ignore
     if (ctx.message?.dice?.emoji === '🎲') {
         //@ts-ignore
-        await updateUserState(user.telegramID, 'RANDOM')
+        await updateUserState(user.telegramID, 'RANDOM', redisClient)
         await ctx.reply("Вы выбрали случайные вопросы!")
         //@ts-ignore
     } else if (ctx.message?.text === '📊') {
         //@ts-ignore
-        await updateUserState(user.telegramID, 'ADAPTIVE')
+        await updateUserState(user.telegramID, 'ADAPTIVE', redisClient)
         await ctx.reply("Бот теперь будет адаптивно подбирать вопросы!")
         //@ts-ignore
     } else if (ctx.message?.text === '📝 Следующий вопрос') {
-        sendQuestion(ctx, bot.telegram, await getQuestion({ telegramID: ctx.message.from.id }, false));
+        sendQuestion(ctx, bot.telegram, await getQuestion({ telegramID: user.telegramID }, false));
     }
     await next();
 })
@@ -93,7 +100,10 @@ if (environment === 'local') {
 }
 
 
+function botStop(stopReason: string) {
+    redisClient.disconnect()
+    bot.stop(stopReason)
+}
 
-
-process.once('SIGINT', () => bot.stop('SIGINT'))
-process.once('SIGTERM', () => bot.stop('SIGTERM'))
+process.once('SIGINT', () => botStop('SIGINT'))
+process.once('SIGTERM', () => botStop('SIGTERM'))

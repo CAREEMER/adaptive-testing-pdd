@@ -18,3 +18,6 @@ docker exec -it db_db_1 pg_dump -U rashid -w pdd-tg-bot-staging --no-owner > st-
 
 
 cat dumb.sql | docker exec -i pdd-tg-bot_db_1 psql -U sample_user -d sample_user
+
+
+postgresql://sample_user:sample_user@localhost:5432/sample_user

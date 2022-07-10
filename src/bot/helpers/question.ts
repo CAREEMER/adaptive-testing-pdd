@@ -32,8 +32,6 @@ function constuctKeyboard(question, messageText) {
         keys.push({ text: i + 1, callback_data: answer.correct + '**' + question.id, hide: false })
     }
 
-    console.log(replyMarkup.reply_markup.inline_keyboard)
-
     return replyMarkup
 }
 
