@@ -94,7 +94,11 @@ if (environment === 'local') {
 
     const webhookUrl = process.env.DOMAIN + (process.env.SECRET_PATH || '/secret-path')
 
-    bot.telegram.setWebhook(webhookUrl)
+    try {
+        bot.telegram.setWebhook(webhookUrl)
+    } catch (err) {
+        console.log(err)
+    }
 
     console.log("BOT IS STARTED ON " + webhookUrl)
 }
