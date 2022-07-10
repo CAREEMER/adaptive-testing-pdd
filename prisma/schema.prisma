@@ -33,9 +33,10 @@ model SessionToken {
 }
 
 model QuestionCategory {
-    id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    name      String     @unique @db.VarChar(255)
-    questions Question[]
+    id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name         String     @unique @db.VarChar(255)
+    verbose_name String?
+    questions    Question[]
 }
 
 model Question {
