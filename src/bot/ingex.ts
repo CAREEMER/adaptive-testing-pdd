@@ -33,7 +33,7 @@ bot.use(async (ctx, next) => {
         await ctx.reply("Бот теперь будет адаптивно подбирать вопросы!")
         //@ts-ignore
     } else if (ctx.message?.text === '📝 Следующий вопрос') {
-        sendQuestion(ctx, await getQuestion({ telegramID: ctx.message.from.id }, false));
+        sendQuestion(ctx, bot.telegram, await getQuestion({ telegramID: ctx.message.from.id }, false));
     }
     await next();
 })
@@ -47,7 +47,7 @@ bot.command('start', async (ctx) => {
 })
 
 bot.command('q', async (ctx) => {
-    sendQuestion(ctx, await getQuestion({ telegramID: ctx.message.from.id }, false));
+    sendQuestion(ctx, bot.telegram, await getQuestion({ telegramID: ctx.message.from.id }, false));
 })
 
 bot.on('callback_query', async (ctx) => {
@@ -70,7 +70,7 @@ bot.on('callback_query', async (ctx) => {
     //@ts-ignore
     var randomQuestion = await getQuestion({ telegramID: ctx.chat.id }, false)
 
-    sendQuestion(ctx, randomQuestion);
+    sendQuestion(ctx, bot.telegram, randomQuestion);
 })
 
 if (environment === 'local') {
