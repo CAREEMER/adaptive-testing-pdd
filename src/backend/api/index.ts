@@ -1,4 +1,4 @@
-const express = require('express');
+const _express = require('express');
 
 const auth = require('./auth/auth.routes')
 const categories = require('./categories/categories.routes')
@@ -6,7 +6,7 @@ const questions = require('./questions/questions.routes')
 const question = require('./question/question.routes')
 
 
-const router = express.Router();
+const router = _express.Router();
 
 router.use('/auth', auth);
 router.use('/categories', categories)
